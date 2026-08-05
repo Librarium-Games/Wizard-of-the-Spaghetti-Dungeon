@@ -9,13 +9,13 @@
   --bg:#0f0a06;--panel:#171008;--panel2:#21160c;--panel3:#2a1b0f;
   --line:#5f421f;--line2:#8d6427;--text:#f9e6b6;--muted:#bda77a;
   --gold:#efb747;--gold2:#ffcf63;--green:#5b9b4d;--red:#b63d31;
-  --blue:#3e6798;--head:330px;--inspect:260px;--trackH:42px;
+  --blue:#3e6798;--head:390px;--inspect:285px;--trackH:44px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.25 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{height:100vh;display:grid;grid-template-rows:86px 1fr 370px 28px;background:linear-gradient(#120c07,#0a0704)}
+.app{height:100vh;display:grid;grid-template-rows:86px 1fr 430px 28px;background:linear-gradient(#120c07,#0a0704)}
 .top{
   display:grid;grid-template-columns:280px auto 1fr auto;align-items:center;gap:14px;
   padding:9px 12px;border-bottom:1px solid var(--line);background:linear-gradient(#1b1209,#110b06);
@@ -47,7 +47,7 @@ button{cursor:pointer}
 
 .workspace{display:grid;grid-template-columns:var(--head) 1fr var(--inspect);min-height:0}
 .trackPane{background:#120c07;border-right:1px solid var(--line);overflow:hidden}
-.trackHeader,.trackRow{display:grid;grid-template-columns:32px 1fr 30px 30px 76px 44px 52px;align-items:center;gap:4px;padding:0 6px}
+.trackHeader,.trackRow{display:grid;grid-template-columns:32px 1fr 30px 30px 68px 40px 48px 48px;align-items:center;gap:4px;padding:0 6px}
 .trackHeader{height:28px;border-bottom:1px solid var(--line);color:var(--muted);font-size:10px;text-transform:uppercase}
 .trackRows{overflow:auto;height:calc(100% - 28px)}
 .trackRow{height:var(--trackH);border-bottom:1px solid #3b2815;background:linear-gradient(90deg,#20150b,#171008)}
@@ -90,7 +90,7 @@ button{cursor:pointer}
 .mixerTabs button{width:100%;margin-bottom:6px}
 .channelScroll{overflow:auto}
 .channels{display:flex;min-width:max-content;height:100%}
-.strip{width:112px;border-right:1px solid #4a3218;padding:7px 6px;background:linear-gradient(#1b1209,#110b06);display:flex;flex-direction:column;align-items:center;gap:5px}
+.strip{width:126px;border-right:1px solid #4a3218;padding:7px 6px;background:linear-gradient(#1b1209,#110b06);display:flex;flex-direction:column;align-items:center;gap:5px}
 .stripHeader{width:100%;text-align:center;border:1px solid var(--line);background:#25170b;color:var(--gold2);padding:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .knobLabel{font-size:9px;color:var(--muted)}
 .knob{width:34px;height:34px;border:2px solid var(--line2);border-radius:50%;position:relative;background:radial-gradient(circle,#2e1c0e,#100a05)}
@@ -113,8 +113,8 @@ button{cursor:pointer}
 @media(max-width:1100px){
   :root{--head:255px;--inspect:0px}
   .top{grid-template-columns:220px auto 1fr}.masterTop{display:none}.inspector{display:none}
-  .trackHeader,.trackRow{grid-template-columns:28px 1fr 28px 28px 60px 40px}
-  .trackHeader>*:last-child,.trackRow>*:last-child{display:none}
+  .trackHeader,.trackRow{grid-template-columns:28px 1fr 28px 28px 56px 36px 44px}
+  .trackHeader>*:nth-last-child(2),.trackRow>*:nth-last-child(2){display:none}
 }
 @media(max-width:760px){
   html,body{overflow:auto}
@@ -282,6 +282,61 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
   .fader::-moz-range-thumb{width:20px;height:28px}
 }
 
+
+/* Robust per-track MIDI transcription controls */
+.midiBtn{
+  min-width:44px;
+  height:25px;
+  padding:0 5px;
+  border:1px solid #8a642b;
+  border-radius:3px;
+  background:linear-gradient(#4a3013,#25180b);
+  color:#ffe6a9;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+.midiBtn:hover{border-color:var(--gold2);background:linear-gradient(#65401a,#2d1b0c)}
+.midiBtn:disabled{opacity:.48;cursor:wait}
+.midiControls{
+  width:100%;
+  display:grid;
+  gap:4px;
+  margin-top:2px;
+}
+.midiControls select{
+  width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:#25170b;
+  color:var(--text);
+  padding:4px 3px;
+  font-size:9px;
+}
+.midiControls .midiExport{width:100%;min-height:29px;padding:4px 5px;font-size:9px}
+.midiState{width:100%;min-height:14px;color:var(--muted);font-size:8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progressTrack{height:6px;border:1px solid #543817;border-radius:99px;background:#080503;overflow:hidden}
+.progressTrack>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold2));transition:width .15s linear}
+.midiSettingsGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.midiSettingsGrid label{display:block;margin:0;color:var(--muted);font-size:10px}
+.midiSettingsGrid input,.midiSettingsGrid select{display:block;width:100%;max-width:none;margin-top:3px}
+.midiSummary{margin-top:7px;padding:7px;border:1px solid #523719;border-radius:4px;background:#0d0905;color:var(--muted);font-size:10px;line-height:1.35}
+.midiSummary strong{color:var(--gold2)}
+.midiActions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.midiActions .btn{width:100%;font-size:10px;padding:6px}
+.midiPill{display:inline-block;padding:2px 5px;border:1px solid #765322;border-radius:99px;background:#27180b;color:var(--gold2);font-size:9px}
+@media(max-width:760px){
+  .midiControls{grid-column:1/-1;grid-template-columns:1fr 1fr auto;align-items:center}
+  .midiControls .midiExport{min-height:40px}
+  .midiState{grid-column:1/-1;text-align:left}
+  .progressTrack{grid-column:1/-1}
+}
+@media(max-width:470px){
+  .midiControls{grid-template-columns:1fr}
+  .midiControls .midiExport,.midiControls select{grid-column:1}
+}
+
 </style>
 </head>
 <body>
@@ -313,7 +368,7 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
     <div class="toolrow">
       <button id="loadRepo" class="btn">▶ LOAD PROJECT STEMS</button>
       <label class="btn">⇧ IMPORT AUDIO<input id="files" type="file" accept="audio/*" multiple hidden></label>
-      <button class="btn">⇩ EXPORT SESSION</button>
+      <button id="exportAllMidi" class="btn" disabled>⇩ EXPORT ALL MIDI ZIP</button>
       <span>SNAP</span><select><option>Bar</option><option>Beat</option><option>Off</option></select>
       <span>GRID</span><select><option>1/4</option><option>1/8</option><option>1/16</option></select>
       <div class="spacer"></div>
@@ -324,7 +379,7 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
 
   <section class="workspace">
     <aside class="trackPane">
-      <div class="trackHeader"><span>#</span><span>TRACK</span><span>M</span><span>S</span><span>VOL</span><span>PAN</span><span>METER</span></div>
+      <div class="trackHeader"><span>#</span><span>TRACK</span><span>M</span><span>S</span><span>VOL</span><span>PAN</span><span>METER</span><span>MIDI</span></div>
       <div id="trackRows" class="trackRows"></div>
     </aside>
 
@@ -345,9 +400,30 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
           <label>Pan <input id="inspectPan" type="range" min="-1" max="1" step=".01" value="0" disabled></label>
         </div>
         <div class="card">
-          <strong>MIDI EXPORT</strong>
-          <label>Type <select id="inspectMidi" disabled><option value="melodic">Melodic MIDI</option><option value="drums">Drum MIDI</option></select></label>
-          <button id="inspectExport" class="btn" style="width:100%" disabled>EXPORT MIDI</button>
+          <strong>MIDI TRANSCRIPTION</strong>
+          <p class="note">AI Polyphonic uses Spotify Basic Pitch when available. Fast Melody and Drum Map work fully in-browser as fallbacks.</p>
+          <div class="midiSettingsGrid">
+            <label>Engine<select id="inspectMidi" disabled>
+              <option value="ai">AI Polyphonic</option>
+              <option value="melodic">Fast Melody</option>
+              <option value="drums">Drum Map</option>
+            </select></label>
+            <label>Tempo<input id="midiTempo" type="number" min="30" max="300" value="126" disabled></label>
+            <label>Quantize<select id="midiQuantize" disabled>
+              <option value="off">Off</option><option value="1/32">1/32</option><option value="1/16" selected>1/16</option><option value="1/8">1/8</option><option value="1/4">1/4</option>
+            </select></label>
+            <label>Min note<input id="midiMinMs" type="number" min="20" max="1000" step="10" value="70" disabled></label>
+            <label>Lowest note<input id="midiMinNote" type="number" min="0" max="126" value="24" disabled></label>
+            <label>Highest note<input id="midiMaxNote" type="number" min="1" max="127" value="108" disabled></label>
+            <label>Onset<input id="midiOnset" type="number" min="0.05" max="0.95" step="0.01" value="0.25" disabled></label>
+            <label>Frame<input id="midiFrame" type="number" min="0.05" max="0.95" step="0.01" value="0.25" disabled></label>
+          </div>
+          <div id="midiSummary" class="midiSummary">Select a track to configure its MIDI transcription.</div>
+          <div class="progressTrack"><div id="inspectMidiProgress"></div></div>
+          <div class="midiActions">
+            <button id="inspectExport" class="btn" disabled>EXPORT .MID</button>
+            <button id="inspectClearMidi" class="btn" disabled>CLEAR CACHE</button>
+          </div>
         </div>
         <div class="card">
           <strong>AUDIO FILE</strong>
@@ -394,7 +470,11 @@ const repo=[
  ['Synth','Wizard of the Spaghetti Dungeon (Synth).mp3'],['FX','Wizard of the Spaghetti Dungeon (FX).mp3']
 ];
 const colors=['#c84336','#3f6da3','#d96d1c','#dfa52f','#7e4b99','#2d8f89','#5d8f3b','#a5652a','#bd526d','#8e6a98','#6b6b6b','#9b5b27'];
+const BASIC_PITCH_MODULE_URL='https://cdn.jsdelivr.net/npm/@spotify/basic-pitch@1.0.1/+esm';
+const BASIC_PITCH_MODEL_URL='https://cdn.jsdelivr.net/npm/@spotify/basic-pitch@1.0.1/model/model.json';
 let ctx,masterGain,dryBus,convolver,reverbGain,masterAnalyser;
+let basicPitchRuntimePromise=null;
+let exportQueue=Promise.resolve();
 let tracks=[],selected=null,playing=false,startTime=0,pausedAt=0,duration=0,raf=0,pxPerSec=64;
 
 function fmt(t){t=Math.max(0,t||0);let m=Math.floor(t/60),s=Math.floor(t%60),ms=Math.floor((t%1)*1000);return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(3,'0')}`}
@@ -519,6 +599,212 @@ async function loadAudioBuffer(file){
  throw new Error(`${file}: ${lastError?.message||'all audio sources failed'}`);
 }
 
+
+function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+function safeName(value){return String(value||'track').replace(/[\\/:*?"<>|]+/g,'_').replace(/\s+/g,' ').trim()||'track'}
+function midiToHz(note){return 440*Math.pow(2,(note-69)/12)}
+function guessMidiDefaults(name){
+ const n=name.toLowerCase();
+ if(/drum|percussion/.test(n))return {engine:'drums',minNote:24,maxNote:108,program:0,channel:9};
+ if(/bass/.test(n))return {engine:'ai',minNote:24,maxNote:64,program:33,channel:0};
+ if(/guitar/.test(n))return {engine:'ai',minNote:36,maxNote:96,program:29,channel:0};
+ if(/keyboard|piano/.test(n))return {engine:'ai',minNote:21,maxNote:108,program:0,channel:0};
+ if(/string/.test(n))return {engine:'ai',minNote:36,maxNote:108,program:48,channel:0};
+ if(/brass/.test(n))return {engine:'ai',minNote:34,maxNote:96,program:61,channel:0};
+ if(/woodwind|flute/.test(n))return {engine:'ai',minNote:48,maxNote:108,program:73,channel:0};
+ if(/synth/.test(n))return {engine:'ai',minNote:24,maxNote:108,program:81,channel:0};
+ if(/vocal/.test(n))return {engine:'ai',minNote:36,maxNote:96,program:53,channel:0};
+ if(/fx/.test(n))return {engine:'drums',minNote:0,maxNote:127,program:97,channel:9};
+ return {engine:'ai',minNote:24,maxNote:108,program:0,channel:0};
+}
+function createMidiSettings(name){
+ const d=guessMidiDefaults(name);
+ return {engine:d.engine,tempo:126,quantize:'1/16',minMs:70,minNote:d.minNote,maxNote:d.maxNote,onset:.25,frame:.25,program:d.program,channel:d.channel};
+}
+function updateMidiSummary(t,message=''){
+ if(!t)return;
+ const s=t.midiSettings;
+ const cached=t.midiCache?.size||0;
+ const engine=s.engine==='ai'?'AI Polyphonic':s.engine==='drums'?'Drum Map':'Fast Melody';
+ const summary=`<strong>${engine}</strong> · ${s.quantize==='off'?'No quantize':s.quantize+' grid'} · ${s.minNote}–${s.maxNote} · ${s.tempo} BPM · Cache ${cached}`;
+ if(selected===t)$('#midiSummary').innerHTML=message?summary+`<br>${message}`:summary;
+ if(t.midiState)t.midiState.textContent=message||`${engine} ready`;
+}
+function setMidiProgress(t,pct,label=''){
+ const value=clamp(Number(pct)||0,0,100);
+ if(t)t.midiProgressValue=value;
+ if(t?.midiProgress)t.midiProgress.style.width=value+'%';
+ if(selected===t)$('#inspectMidiProgress').style.width=value+'%';
+ if(label)updateMidiSummary(t,label);
+}
+function midiSettingsKey(settings){
+ return JSON.stringify({engine:settings.engine,tempo:+settings.tempo,quantize:settings.quantize,minMs:+settings.minMs,minNote:+settings.minNote,maxNote:+settings.maxNote,onset:+settings.onset,frame:+settings.frame});
+}
+function applyInspectorMidiSettings(t){
+ if(!t)return;
+ const s=t.midiSettings;
+ $('#inspectMidi').value=s.engine;$('#midiTempo').value=s.tempo;$('#midiQuantize').value=s.quantize;$('#midiMinMs').value=s.minMs;
+ $('#midiMinNote').value=s.minNote;$('#midiMaxNote').value=s.maxNote;$('#midiOnset').value=s.onset;$('#midiFrame').value=s.frame;
+ updateMidiSummary(t);
+}
+async function getBasicPitchRuntime(){
+ if(!basicPitchRuntimePromise){
+   basicPitchRuntimePromise=(async()=>{
+     setLoadStatus('Loading AI MIDI model…');
+     const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('AI model load timed out')),60000));
+     const load=(async()=>{
+       const mod=await import(BASIC_PITCH_MODULE_URL);
+       if(!mod.BasicPitch||!mod.outputToNotesPoly||!mod.noteFramesToTime)throw new Error('Basic Pitch module exports are unavailable');
+       const instance=new mod.BasicPitch(BASIC_PITCH_MODEL_URL);
+       if(instance.model)await instance.model;
+       return {mod,instance};
+     })();
+     return await Promise.race([load,timeout]);
+   })().catch(error=>{basicPitchRuntimePromise=null;throw error});
+ }
+ return basicPitchRuntimePromise;
+}
+function monoData(buffer,targetRate=22050){
+ const sourceRate=buffer.sampleRate,ratio=sourceRate/targetRate,length=Math.max(1,Math.floor(buffer.length/ratio));
+ const out=new Float32Array(length),channels=buffer.numberOfChannels;
+ for(let i=0;i<length;i++){
+   const pos=i*ratio,index=Math.floor(pos),frac=pos-index;
+   let value=0;
+   for(let c=0;c<channels;c++){
+     const data=buffer.getChannelData(c),a=data[Math.min(index,data.length-1)]||0,b=data[Math.min(index+1,data.length-1)]||a;
+     value+=a+(b-a)*frac;
+   }
+   out[i]=value/channels;
+ }
+ return {data:out,sampleRate:targetRate};
+}
+function percentile(values,p){
+ if(!values.length)return 0;
+ const a=[...values].sort((x,y)=>x-y),i=clamp(Math.floor((a.length-1)*p),0,a.length-1);return a[i];
+}
+function fftMagnitudes(input){
+ const n=input.length,re=new Float64Array(n),im=new Float64Array(n);
+ for(let i=0;i<n;i++)re[i]=input[i]*(0.5-0.5*Math.cos(2*Math.PI*i/(n-1)));
+ for(let i=1,j=0;i<n;i++){
+   let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+   if(i<j){let tr=re[i];re[i]=re[j];re[j]=tr;tr=im[i];im[i]=im[j];im[j]=tr}
+ }
+ for(let len=2;len<=n;len<<=1){
+   const ang=-2*Math.PI/len,wlenCos=Math.cos(ang),wlenSin=Math.sin(ang);
+   for(let i=0;i<n;i+=len){let wr=1,wi=0;for(let j=0;j<len/2;j++){
+     const uR=re[i+j],uI=im[i+j],vR=re[i+j+len/2]*wr-im[i+j+len/2]*wi,vI=re[i+j+len/2]*wi+im[i+j+len/2]*wr;
+     re[i+j]=uR+vR;im[i+j]=uI+vI;re[i+j+len/2]=uR-vR;im[i+j+len/2]=uI-vI;
+     const nwr=wr*wlenCos-wi*wlenSin;wi=wr*wlenSin+wi*wlenCos;wr=nwr;
+   }}
+ }
+ const mag=new Float64Array(n/2);for(let i=0;i<mag.length;i++)mag[i]=Math.hypot(re[i],im[i]);return mag;
+}
+function spectralPitch(frame,sampleRate,minNote,maxNote){
+ const mag=fftMagnitudes(frame),binHz=sampleRate/frame.length,minBin=Math.max(1,Math.floor(midiToHz(minNote)/binHz)),maxBin=Math.min(mag.length-2,Math.ceil(midiToHz(maxNote)/binHz));
+ let total=0,peak=0;for(let i=minBin;i<=maxBin;i++){total+=mag[i];if(mag[i]>peak)peak=mag[i]}
+ if(!total||peak/total<.012)return null;
+ let bestBin=-1,bestScore=0;
+ for(let b=minBin;b<=maxBin;b++){
+   let score=mag[b];
+   if(b*2<mag.length)score+=mag[b*2]*.55;
+   if(b*3<mag.length)score+=mag[b*3]*.32;
+   if(b*4<mag.length)score+=mag[b*4]*.18;
+   if(score>bestScore){bestScore=score;bestBin=b}
+ }
+ if(bestBin<0)return null;
+ const left=mag[Math.max(0,bestBin-1)],center=mag[bestBin],right=mag[Math.min(mag.length-1,bestBin+1)],den=left-2*center+right;
+ const offset=Math.abs(den)>1e-12?.5*(left-right)/den:0,freq=(bestBin+clamp(offset,-.5,.5))*binHz;
+ return {midi:69+12*Math.log2(freq/440),confidence:bestScore/(total+1e-12)};
+}
+function normalizeNotes(notes,settings){
+ const minDur=Math.max(.02,settings.minMs/1000),gridMap={'1/32':8,'1/16':4,'1/8':2,'1/4':1},steps=gridMap[settings.quantize]||0,step=steps?60/settings.tempo/steps:0;
+ let out=notes.map(n=>({start:+n.start||0,end:+n.end||0,note:clamp(Math.round(n.note),0,127),vel:clamp(Math.round(n.vel||90),1,127)}))
+   .filter(n=>Number.isFinite(n.start)&&Number.isFinite(n.end)&&n.end>n.start&&n.note>=settings.minNote&&n.note<=settings.maxNote);
+ if(step)out=out.map(n=>{let start=Math.round(n.start/step)*step,end=Math.round(n.end/step)*step;if(end<=start)end=start+step;return {...n,start,end}});
+ out=out.filter(n=>n.end-n.start>=Math.min(minDur,step||minDur)).sort((a,b)=>a.start-b.start||a.note-b.note||a.end-b.end);
+ const lastByPitch=new Map(),clean=[];
+ for(const n of out){
+   const prev=lastByPitch.get(n.note);
+   if(prev&&n.start<prev.end){
+     if(n.start-prev.start<.035){prev.end=Math.max(prev.end,n.end);prev.vel=Math.max(prev.vel,n.vel);continue}
+     prev.end=Math.max(prev.start+.01,n.start-.001);
+   }
+   clean.push(n);lastByPitch.set(n.note,n);
+ }
+ return clean.slice(0,200000);
+}
+async function transcribeAI(t,settings,onProgress){
+ const {mod,instance}=await getBasicPitchRuntime(),frames=[],onsets=[],contours=[];
+ await instance.evaluateModel(t.buffer,(f,o,c)=>{frames.push(...f);onsets.push(...o);contours.push(...c)},p=>onProgress(clamp((p<=1?p*100:p),0,96),'AI analysis'));
+ const minFrames=Math.max(1,Math.round(settings.minMs/11.6));
+ const raw=mod.outputToNotesPoly(frames,onsets,settings.onset,settings.frame,minFrames,true,midiToHz(settings.maxNote),midiToHz(settings.minNote),true,11);
+ const timed=mod.noteFramesToTime(raw);
+ return timed.map(n=>({start:n.startTimeSeconds,end:n.startTimeSeconds+n.durationSeconds,note:n.pitchMidi,vel:clamp(Math.round((n.amplitude||.7)*127),15,127)}));
+}
+async function transcribeMelody(t,settings,onProgress){
+ const {data,sampleRate}=monoData(t.buffer,11025),size=2048,hop=512,frames=Math.max(0,Math.floor((data.length-size)/hop));
+ const detected=[];
+ for(let f=0;f<frames;f++){
+   const start=f*hop,frame=data.subarray(start,start+size);let rms=0;for(let x of frame)rms+=x*x;rms=Math.sqrt(rms/size);
+   const pitch=rms>.012?spectralPitch(frame,sampleRate,settings.minNote,settings.maxNote):null;
+   detected.push({time:start/sampleRate,midi:pitch?.midi??null,rms,confidence:pitch?.confidence||0});
+   if(f%24===0){onProgress(f/Math.max(1,frames)*94,'Fast melody analysis');await new Promise(r=>setTimeout(r,0))}
+ }
+ // Median smoothing plus note segmentation with short-gap tolerance.
+ for(let i=2;i<detected.length-2;i++)if(detected[i].midi!=null){const vals=detected.slice(i-2,i+3).map(x=>x.midi).filter(Number.isFinite).sort((a,b)=>a-b);if(vals.length>=3)detected[i].midi=vals[Math.floor(vals.length/2)]}
+ const notes=[];let active=null,silenceFrames=0;
+ for(let i=0;i<detected.length;i++){
+   const d=detected[i],note=d.midi==null?null:Math.round(d.midi),time=d.time;
+   if(note==null){silenceFrames++;if(active&&silenceFrames>2){active.end=time;notes.push(active);active=null}continue}
+   silenceFrames=0;
+   if(!active){active={start:time,end:time+hop/sampleRate,note,vel:clamp(Math.round(35+d.rms*520),20,127),samples:1}}
+   else if(Math.abs(note-active.note)<=0){active.end=time+hop/sampleRate;active.vel=Math.max(active.vel,clamp(Math.round(35+d.rms*520),20,127));active.samples++}
+   else{active.end=time;notes.push(active);active={start:time,end:time+hop/sampleRate,note,vel:clamp(Math.round(35+d.rms*520),20,127),samples:1}}
+ }
+ if(active)notes.push(active);
+ return notes;
+}
+async function transcribeDrums(t,settings,onProgress){
+ const {data,sampleRate}=monoData(t.buffer,22050),size=1024,hop=256,frameCount=Math.max(0,Math.floor((data.length-size)/hop));
+ const flux=new Float32Array(frameCount),spectra=new Array(frameCount);let prev=null;
+ for(let f=0;f<frameCount;f++){
+   const mag=fftMagnitudes(data.subarray(f*hop,f*hop+size));spectra[f]=mag;let value=0;
+   if(prev)for(let i=1;i<mag.length;i++){const diff=mag[i]-prev[i];if(diff>0)value+=diff}
+   flux[f]=value;prev=mag;
+   if(f%40===0){onProgress(f/Math.max(1,frameCount)*82,'Drum transient analysis');await new Promise(r=>setTimeout(r,0))}
+ }
+ const positive=[...flux].filter(x=>x>0),base=percentile(positive,.55),high=percentile(positive,.92),threshold=base+(high-base)*clamp(settings.onset,.08,.8);
+ const notes=[],minGap=Math.max(2,Math.round(.045*sampleRate/hop));let last=-minGap;
+ for(let i=2;i<flux.length-2;i++){
+   const local=(flux[i-2]+flux[i-1]+flux[i+1]+flux[i+2])/4;
+   if(flux[i]<threshold||flux[i]<local*1.18||i-last<minGap)continue;
+   last=i;const mag=spectra[i],binHz=sampleRate/size;let low=0,mid=0,highE=0,total=0,weighted=0;
+   for(let b=1;b<mag.length;b++){const e=mag[b]*mag[b],hz=b*binHz;total+=e;weighted+=e*hz;if(hz<220)low+=e;else if(hz<2800)mid+=e;else highE+=e}
+   const centroid=total?weighted/total:0,lr=low/(total||1),hr=highE/(total||1);let note=38;
+   if(lr>.48||centroid<330)note=36;else if(hr>.56||centroid>5200)note=42;else if(lr>.28&&centroid<900)note=45;else if(hr>.34)note=46;
+   const velocity=clamp(Math.round(25+102*Math.sqrt(flux[i]/Math.max(high,1e-9))),20,127),start=i*hop/sampleRate;
+   notes.push({start,end:start+(note===42?0.06:0.11),note,vel:velocity});
+ }
+ onProgress(94,'Classifying drum hits');
+ return notes;
+}
+async function transcribeTrack(t,force=false){
+ const settings=t.midiSettings,key=midiSettingsKey(settings);
+ if(!force&&t.midiCache.has(key))return t.midiCache.get(key);
+ const progress=(pct,label)=>setMidiProgress(t,pct,label);
+ let notes,usedEngine=settings.engine,fallback='';
+ progress(2,'Preparing transcription…');
+ if(settings.engine==='ai'){
+   try{notes=await transcribeAI(t,settings,progress)}catch(error){console.warn('AI MIDI failed; using fast fallback',error);fallback=`AI unavailable (${error.message}); used Fast Melody.`;usedEngine='melodic';notes=await transcribeMelody(t,settings,progress)}
+ }else if(settings.engine==='drums')notes=await transcribeDrums(t,settings,progress);
+ else notes=await transcribeMelody(t,settings,progress);
+ notes=normalizeNotes(notes,settings);
+ if(!notes.length)throw new Error('No reliable notes were detected with the current settings.');
+ const result={notes,usedEngine,fallback,created:Date.now()};t.midiCache.set(key,result);
+ progress(100,`${notes.length} notes ready${fallback?' · fallback used':''}`);return result;
+}
+function gmProgramForTrack(t){return clamp(t.midiSettings.program||0,0,127)}
+
 async function init(){
  if(ctx)return;
  ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -537,7 +823,7 @@ function rebuildRuler(){
    requestAnimationFrame(()=>drawWaveform(t.waveCanvas,t.buffer,t.color));
  });
  $('#footerTracks').textContent='Channels: '+tracks.length;$('#footerDuration').textContent='Duration: '+fmt(duration);
- $('#play').disabled=$('#stop').disabled=!tracks.length;
+ $('#play').disabled=$('#stop').disabled=!tracks.length;$('#exportAllMidi').disabled=!tracks.length;
 }
 
 function selectTrack(t){
@@ -545,15 +831,17 @@ function selectTrack(t){
  selected=t;
  if(t){t.row.classList.add('selected');t.lane.classList.add('selected');t.strip.classList.add('selected')}
  $('#selectedName').textContent=t?.name||'No track selected';
- $('#inspectName').disabled=$('#inspectGain').disabled=$('#inspectPan').disabled=$('#inspectMidi').disabled=$('#inspectExport').disabled=$('#inspectDelete').disabled=!t;
+ const midiInputs=['#inspectMidi','#midiTempo','#midiQuantize','#midiMinMs','#midiMinNote','#midiMaxNote','#midiOnset','#midiFrame','#inspectExport','#inspectClearMidi'];
+ $('#inspectName').disabled=$('#inspectGain').disabled=$('#inspectPan').disabled=$('#inspectDelete').disabled=!t;
+ midiInputs.forEach(id=>$(id).disabled=!t);
  if(!t)return;
- $('#inspectName').value=t.name;setRange($('#inspectGain'),t.volume);setRange($('#inspectPan'),t.panValue);$('#inspectMidi').value=t.midiMode;$('#inspectFile').textContent=t.fileLabel;
+ $('#inspectName').value=t.name;setRange($('#inspectGain'),t.volume);setRange($('#inspectPan'),t.panValue);$('#inspectFile').textContent=t.fileLabel;applyInspectorMidiSettings(t);setMidiProgress(t,t.midiProgressValue||0);
 }
 
 function addTrack(name,buffer,fileLabel=name){
  const i=tracks.length,color=colors[i%colors.length];
  const row=document.createElement('div');row.className='trackRow';
- row.innerHTML=`<div class="trackNum">${i+1}</div><div class="trackName">${name}</div><button class="mini mute">M</button><button class="mini solo">S</button><input class="vol" type="range" min="0" max="1.25" step=".01" value=".8"><div class="knobMini"></div><div class="trackMeter"><div></div></div>`;
+ row.innerHTML=`<div class="trackNum">${i+1}</div><div class="trackName">${name}</div><button class="mini mute">M</button><button class="mini solo">S</button><input class="vol" type="range" min="0" max="1.25" step=".01" value=".8"><div class="knobMini"></div><div class="trackMeter"><div></div></div><button class="midiBtn rowMidi">MIDI</button>`;
  $('#trackRows').appendChild(row);
 
  const lane=document.createElement('div');lane.className='lane';
@@ -561,12 +849,13 @@ function addTrack(name,buffer,fileLabel=name){
  $('#timeline').appendChild(lane);
 
  const strip=document.createElement('div');strip.className='strip';
- strip.innerHTML=`<div class="stripHeader">${i+1}<br>${name}</div><div class="knob"></div><div class="knobLabel">PAN</div><div class="knob"></div><div class="knobLabel">REVERB</div><canvas class="trackViz" aria-label="${name} live frequency visualization"></canvas><div class="vizLabel">LIVE SPECTRUM</div><div class="faderZone"><input class="fader" type="range" min="0" max="1.25" step=".01" value=".8"><div class="stripMeter"><div></div></div></div><div class="db">-2.0 dB</div><div class="row"><button class="mini mute">M</button><button class="mini solo">S</button></div>`;
+ strip.innerHTML=`<div class="stripHeader">${i+1}<br>${name}</div><div class="knob"></div><div class="knobLabel">PAN</div><div class="knob"></div><div class="knobLabel">REVERB</div><canvas class="trackViz" aria-label="${name} live frequency visualization"></canvas><div class="vizLabel">LIVE SPECTRUM</div><div class="faderZone"><input class="fader" type="range" min="0" max="1.25" step=".01" value=".8"><div class="stripMeter"><div></div></div></div><div class="db">-2.0 dB</div><div class="row"><button class="mini mute">M</button><button class="mini solo">S</button></div><div class="midiControls"><select class="trackMidiMode"><option value="ai">AI Polyphonic</option><option value="melodic">Fast Melody</option><option value="drums">Drum Map</option></select><button class="btn midiExport">EXPORT MIDI</button><div class="midiState">Ready</div><div class="progressTrack"><div></div></div></div>`;
  $('#channels').appendChild(strip);
 
  const gain=ctx.createGain(),pan=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain(),send=ctx.createGain(),an=ctx.createAnalyser();an.fftSize=64;
  gain.connect(an).connect(pan);pan.connect(dryBus);pan.connect(send).connect(convolver);send.gain.value=.1;
- const t={name,buffer,fileLabel,row,lane,clip:lane.querySelector('.clip'),waveCanvas:lane.querySelector('.clipWave'),vizCanvas:strip.querySelector('.trackViz'),color,strip,gain,pan,send,an,source:null,volume:.8,panValue:0,muted:false,solo:false,midiMode:'melodic'};
+ const midiSettings=createMidiSettings(name);
+ const t={name,buffer,fileLabel,row,lane,clip:lane.querySelector('.clip'),waveCanvas:lane.querySelector('.clipWave'),vizCanvas:strip.querySelector('.trackViz'),color,strip,gain,pan,send,an,source:null,volume:.8,panValue:0,muted:false,solo:false,midiSettings,midiCache:new Map(),midiState:strip.querySelector('.midiState'),midiProgress:strip.querySelector('.progressTrack>div'),midiProgressValue:0};
  tracks.push(t);
  row.querySelectorAll('input[type="range"]').forEach(bindRange);
  strip.querySelectorAll('input[type="range"]').forEach(bindRange);
@@ -574,6 +863,15 @@ function addTrack(name,buffer,fileLabel=name){
    drawWaveform(t.waveCanvas,buffer,color);
    drawSpectrum(t.vizCanvas,new Uint8Array(t.an.frequencyBinCount),color,false);
  });
+
+ 
+ const modeSelect=strip.querySelector('.trackMidiMode'),midiExportButton=strip.querySelector('.midiExport'),rowMidiButton=row.querySelector('.rowMidi');
+ modeSelect.value=t.midiSettings.engine;
+ modeSelect.addEventListener('click',e=>e.stopPropagation());
+ modeSelect.addEventListener('change',e=>{t.midiSettings.engine=e.target.value;t.midiSettings.channel=e.target.value==='drums'?9:0;t.midiCache.clear();if(selected===t)applyInspectorMidiSettings(t);updateMidiSummary(t,'Settings changed; transcription cache cleared.')});
+ const runExport=async button=>{selectTrack(t);await exportMidi(t,button)};
+ midiExportButton.addEventListener('click',e=>{e.stopPropagation();runExport(midiExportButton)});
+ rowMidiButton.addEventListener('click',e=>{e.stopPropagation();runExport(rowMidiButton)});
 
  const m=[row.querySelector('.mute'),strip.querySelector('.mute')],s=[row.querySelector('.solo'),strip.querySelector('.solo')];
  m.forEach(b=>b.onclick=e=>{e.stopPropagation();t.muted=!t.muted;m.forEach(x=>x.classList.toggle('active',t.muted));applyMix()});
@@ -689,17 +987,69 @@ document.addEventListener('drop',async e=>{
  await importFiles(e.dataTransfer.files);
 });
 
-function varLen(n){let b=[n&127];while(n>>=7)b.unshift((n&127)|128);return b}
-function strBytes(s){return [...new TextEncoder().encode(s)]}
-function chunk(id,data){const len=data.length;return [...strBytes(id),(len>>>24)&255,(len>>>16)&255,(len>>>8)&255,len&255,...data]}
-function midiFile(notes,name,bpm=120){const ppq=480,us=Math.round(60000000/bpm),track=[];track.push(0,0xFF,0x03,name.length,...strBytes(name),0,0xFF,0x51,3,(us>>>16)&255,(us>>>8)&255,us&255);let ev=[];notes.forEach(n=>{ev.push({t:n.start,on:1,n:n.note,v:n.vel||90},{t:n.end,on:0,n:n.note,v:0})});ev.sort((a,b)=>a.t-b.t||(a.on?1:-1));let last=0;for(const e of ev){const tick=Math.round(e.t*bpm/60*ppq);track.push(...varLen(Math.max(0,tick-last)),e.on?0x90:0x80,e.n,e.v);last=tick}track.push(0,0xFF,0x2F,0);return new Uint8Array([...chunk('MThd',[0,0,0,1,0,1,(ppq>>>8)&255,ppq&255]),...chunk('MTrk',track)])}
-function download(bytes,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bytes],{type:'audio/midi'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function autocorrelate(buf,sr){let rms=0;for(let x of buf)rms+=x*x;rms=Math.sqrt(rms/buf.length);if(rms<.015)return-1;let best=-1,bestC=0,min=Math.floor(sr/1200),max=Math.min(Math.floor(sr/55),buf.length-2);for(let lag=min;lag<max;lag++){let c=0;for(let i=0;i<buf.length-lag;i++)c+=buf[i]*buf[i+lag];if(c>bestC){bestC=c;best=lag}}return best>0?sr/best:-1}
-async function exportMidi(t){
- const data=t.buffer.getChannelData(0),sr=t.buffer.sampleRate,notes=[];
- if(t.midiMode==='drums'){const hop=Math.floor(sr*.02),win=Math.floor(sr*.04);let prev=0;for(let i=0;i+win<data.length;i+=hop){let e=0;for(let j=0;j<win;j++)e+=data[i+j]*data[i+j];e=Math.sqrt(e/win);if(e>.08&&e>prev*1.65){const st=i/sr;notes.push({start:st,end:st+.08,note:36,vel:Math.min(127,Math.round(e*300))})}prev=e*.7+prev*.3}}
- else{const win=2048,hop=1024;let active=null;for(let i=0;i+win<data.length;i+=hop){const f=autocorrelate(data.subarray(i,i+win),sr),time=i/sr,n=f>0?Math.max(0,Math.min(127,Math.round(69+12*Math.log2(f/440)))):-1;if(n!==active?.note){if(active){active.end=time;if(active.end-active.start>.06)notes.push(active)}active=n>=0?{start:time,end:time+.08,note:n,vel:90}:null}}if(active){active.end=t.buffer.duration;notes.push(active)}}
- if(!notes.length)return alert('No clear notes or hits detected.');download(midiFile(notes,t.name),t.name.replace(/[^\w-]+/g,'_')+'.mid');
+function varLen(n){n=Math.max(0,Math.round(n));let b=[n&127];while(n>>=7)b.unshift((n&127)|128);return b}
+function strBytes(s){return [...new TextEncoder().encode(String(s))]}
+function be32(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
+function le16(n){return [n&255,(n>>>8)&255]}
+function le32(n){return [n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]}
+function midiChunk(id,data){return [...strBytes(id),...be32(data.length),...data]}
+function midiFile(notes,t,settings){
+ const ppq=480,tempo=clamp(+settings.tempo||126,30,300),us=Math.round(60000000/tempo),channel=settings.engine==='drums'?9:clamp(settings.channel||0,0,15),track=[];
+ const name=strBytes(t.name);track.push(0,0xFF,0x03,...varLen(name.length),...name);
+ track.push(0,0xFF,0x51,3,(us>>>16)&255,(us>>>8)&255,us&255);
+ track.push(0,0xFF,0x58,4,4,2,24,8);
+ if(channel!==9)track.push(0,0xC0|channel,gmProgramForTrack(t));
+ const events=[];
+ for(const n of notes){events.push({tick:Math.max(0,Math.round(n.start*tempo/60*ppq)),priority:1,data:[0x90|channel,n.note,n.vel]});events.push({tick:Math.max(1,Math.round(n.end*tempo/60*ppq)),priority:0,data:[0x80|channel,n.note,0]})}
+ events.sort((a,b)=>a.tick-b.tick||a.priority-b.priority||a.data[1]-b.data[1]);
+ let last=0;for(const e of events){track.push(...varLen(e.tick-last),...e.data);last=e.tick}
+ track.push(0,0xFF,0x2F,0);
+ return new Uint8Array([...midiChunk('MThd',[0,0,0,1,0,1,(ppq>>>8)&255,ppq&255]),...midiChunk('MTrk',track)]);
+}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function downloadBytes(bytes,name,type='audio/midi'){downloadBlob(new Blob([bytes],{type}),name)}
+async function exportMidi(t,button=null,force=false){
+ return exportQueue=exportQueue.then(async()=>{
+   const buttons=[button,t.strip.querySelector('.midiExport'),t.row.querySelector('.rowMidi'),selected===t?$('#inspectExport'):null].filter(Boolean),labels=buttons.map(b=>b.textContent);
+   buttons.forEach(b=>{b.disabled=true;b.textContent='ANALYZING…'});
+   try{
+     const result=await transcribeTrack(t,force),bytes=midiFile(result.notes,t,t.midiSettings),suffix=result.usedEngine==='drums'?'_drums':'_notes';
+     downloadBytes(bytes,safeName(t.name)+suffix+'.mid');
+     updateMidiSummary(t,`Exported ${result.notes.length} notes${result.fallback?' · '+result.fallback:''}`);
+     return {name:safeName(t.name)+suffix+'.mid',bytes,notes:result.notes.length};
+   }catch(error){
+     console.error(error);setMidiProgress(t,0,'MIDI export failed: '+error.message);alert(`${t.name}: ${error.message}`);throw error;
+   }finally{buttons.forEach((b,i)=>{b.disabled=false;b.textContent=labels[i]})}
+ }).catch(()=>null);
+}
+function crc32(bytes){
+ let crc=0xFFFFFFFF;for(const byte of bytes){crc^=byte;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xEDB88320:0)}return (crc^0xFFFFFFFF)>>>0;
+}
+function zipStore(files){
+ const locals=[],centrals=[];let offset=0;
+ const now=new Date(),dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1),dosDate=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+ for(const file of files){
+   const name=strBytes(file.name),data=file.bytes instanceof Uint8Array?file.bytes:new Uint8Array(file.bytes),crc=crc32(data);
+   const local=new Uint8Array([...le32(0x04034b50),...le16(20),...le16(0x0800),...le16(0),...le16(dosTime),...le16(dosDate),...le32(crc),...le32(data.length),...le32(data.length),...le16(name.length),...le16(0),...name,...data]);
+   locals.push(local);
+   const central=new Uint8Array([...le32(0x02014b50),...le16(20),...le16(20),...le16(0x0800),...le16(0),...le16(dosTime),...le16(dosDate),...le32(crc),...le32(data.length),...le32(data.length),...le16(name.length),...le16(0),...le16(0),...le16(0),...le16(0),...le32(0),...le32(offset),...name]);
+   centrals.push(central);offset+=local.length;
+ }
+ const centralSize=centrals.reduce((s,x)=>s+x.length,0),end=new Uint8Array([...le32(0x06054b50),...le16(0),...le16(0),...le16(files.length),...le16(files.length),...le32(centralSize),...le32(offset),...le16(0)]);
+ return new Blob([...locals,...centrals,end],{type:'application/zip'});
+}
+async function exportAllMidiZip(){
+ const button=$('#exportAllMidi');if(!tracks.length)return;
+ button.disabled=true;const original=button.textContent;button.textContent='TRANSCRIBING 0/'+tracks.length;
+ const files=[];
+ try{
+   for(let i=0;i<tracks.length;i++){
+     const t=tracks[i];button.textContent=`TRANSCRIBING ${i+1}/${tracks.length}`;selectTrack(t);
+     try{const result=await transcribeTrack(t),bytes=midiFile(result.notes,t,t.midiSettings);files.push({name:safeName(t.name)+'.mid',bytes})}
+     catch(error){console.warn('Skipping MIDI track',t.name,error);files.push({name:safeName(t.name)+'_ERROR.txt',bytes:new TextEncoder().encode(error.message)})}
+   }
+   downloadBlob(zipStore(files),'Wizard_of_the_Spaghetti_Dungeon_MIDI.zip');setLoadStatus(`Exported ${files.length} MIDI results as ZIP.`);
+ }finally{button.disabled=false;button.textContent=original}
 }
 
 $('#loadRepo').onclick=loadRepo;$('#play').onclick=toggle;$('#stop').onclick=stop;$('#rewind').onclick=()=>seek(0);
@@ -711,7 +1061,19 @@ $('#masterTop').oninput=e=>setMaster(e.target.value);$('#masterFader').oninput=e
 $('#inspectName').onchange=e=>{if(selected){selected.name=e.target.value;selected.row.querySelector('.trackName').textContent=selected.name;selected.strip.querySelector('.stripHeader').innerHTML=selected.strip.querySelector('.stripHeader').innerHTML.split('<br>')[0]+'<br>'+selected.name;selected.clip.querySelector('label').textContent=selected.name;$('#selectedName').textContent=selected.name}};
 $('#inspectGain').oninput=e=>{if(selected){selected.volume=+e.target.value;setRange(selected.row.querySelector('.vol'),selected.volume);setRange(selected.strip.querySelector('.fader'),selected.volume);applyMix()}};
 $('#inspectPan').oninput=e=>{if(selected){selected.panValue=+e.target.value;if(selected.pan.pan)selected.pan.pan.value=selected.panValue}};
-$('#inspectMidi').onchange=e=>{if(selected)selected.midiMode=e.target.value};$('#inspectExport').onclick=()=>selected&&exportMidi(selected);$('#inspectDelete').onclick=()=>selected&&removeTrack(selected);
+function updateSelectedMidiSetting(key,value){if(!selected)return;selected.midiSettings[key]=value;selected.midiSettings.minNote=clamp(+selected.midiSettings.minNote,0,126);selected.midiSettings.maxNote=clamp(+selected.midiSettings.maxNote,selected.midiSettings.minNote+1,127);selected.midiCache.clear();const select=selected.strip.querySelector('.trackMidiMode');if(select)select.value=selected.midiSettings.engine;updateMidiSummary(selected,'Settings changed; cache cleared.')}
+$('#inspectMidi').onchange=e=>{updateSelectedMidiSetting('engine',e.target.value);if(selected)selected.midiSettings.channel=e.target.value==='drums'?9:0};
+$('#midiTempo').onchange=e=>updateSelectedMidiSetting('tempo',clamp(+e.target.value,30,300));
+$('#midiQuantize').onchange=e=>updateSelectedMidiSetting('quantize',e.target.value);
+$('#midiMinMs').onchange=e=>updateSelectedMidiSetting('minMs',clamp(+e.target.value,20,1000));
+$('#midiMinNote').onchange=e=>updateSelectedMidiSetting('minNote',clamp(+e.target.value,0,126));
+$('#midiMaxNote').onchange=e=>updateSelectedMidiSetting('maxNote',clamp(+e.target.value,1,127));
+$('#midiOnset').onchange=e=>updateSelectedMidiSetting('onset',clamp(+e.target.value,.05,.95));
+$('#midiFrame').onchange=e=>updateSelectedMidiSetting('frame',clamp(+e.target.value,.05,.95));
+$('#inspectExport').onclick=()=>selected&&exportMidi(selected,$('#inspectExport'));
+$('#inspectClearMidi').onclick=()=>{if(selected){selected.midiCache.clear();setMidiProgress(selected,0,'Transcription cache cleared.')}};
+$('#inspectDelete').onclick=()=>selected&&removeTrack(selected);
+$('#exportAllMidi').onclick=exportAllMidiZip;
 $('#reset').onclick=()=>{tracks.forEach(t=>{t.muted=t.solo=false;t.volume=.8;t.panValue=0;setRange(t.row.querySelector('.vol'),.8);setRange(t.strip.querySelector('.fader'),.8);t.row.querySelectorAll('.mini').forEach(b=>b.classList.remove('active'));t.strip.querySelectorAll('.mini').forEach(b=>b.classList.remove('active'));if(t.pan.pan)t.pan.pan.value=0});setMaster(.85);applyMix()};
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|SELECT|BUTTON/.test(e.target.tagName)){e.preventDefault();toggle()}});
 document.querySelectorAll('input[type="range"]').forEach(bindRange);
@@ -719,7 +1081,7 @@ window.addEventListener('resize',()=>{
  tracks.forEach(t=>{drawWaveform(t.waveCanvas,t.buffer,t.color);drawSpectrum(t.vizCanvas,new Uint8Array(t.an.frequencyBinCount),t.color,false)});
  draw();
 });
-setLoadStatus('Press LOAD PROJECT STEMS to begin.');
+setLoadStatus('Press LOAD PROJECT STEMS to begin. AI MIDI loads its model only when first used.');
 rebuildRuler();
 })();
 </script>
