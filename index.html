@@ -9,15 +9,15 @@
   --bg:#0f0a06;--panel:#171008;--panel2:#21160c;--panel3:#2a1b0f;
   --line:#5f421f;--line2:#8d6427;--text:#f9e6b6;--muted:#bda77a;
   --gold:#efb747;--gold2:#ffcf63;--green:#5b9b4d;--red:#b63d31;
-  --blue:#3e6798;--head:390px;--inspect:285px;--trackH:44px;
+  --blue:#3e6798;--head:390px;--inspect:285px;--mixerH:430px;--trackH:44px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.25 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{height:100vh;display:grid;grid-template-rows:86px 1fr 430px 28px;background:linear-gradient(#120c07,#0a0704)}
+.app{height:100vh;display:grid;grid-template-rows:auto minmax(150px,1fr) 7px var(--mixerH) 28px;background:linear-gradient(#120c07,#0a0704)}
 .top{
-  display:grid;grid-template-columns:280px auto 1fr auto;align-items:center;gap:14px;
+  display:grid;grid-template-columns:minmax(240px,280px) auto minmax(270px,1fr) minmax(220px,300px);align-items:center;gap:14px;
   padding:9px 12px;border-bottom:1px solid var(--line);background:linear-gradient(#1b1209,#110b06);
 }
 .brand{display:flex;align-items:center;gap:10px}
@@ -41,11 +41,11 @@ button{cursor:pointer}
 .masterTop input{width:110px}
 .topMeter{height:11px;flex:1;background:#060402;border:1px solid #3d2b17;overflow:hidden}.topMeter div{height:100%;width:0;background:linear-gradient(90deg,#4ca348,#d8c64b,#c94d39)}
 .toolrow{
-  grid-column:1/-1;display:flex;align-items:center;gap:8px;padding-top:6px;border-top:1px solid #3a2917
+  grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding-top:6px;border-top:1px solid #3a2917;min-width:0
 }
 .toolrow .spacer{flex:1}.toolrow select{background:#24170c;color:var(--text);border:1px solid var(--line);border-radius:4px;padding:6px 8px}
 
-.workspace{display:grid;grid-template-columns:var(--head) 1fr var(--inspect);min-height:0}
+.workspace{display:grid;grid-template-columns:var(--head) 7px minmax(0,1fr) 7px var(--inspect);min-height:0;overflow:hidden}
 .trackPane{background:#120c07;border-right:1px solid var(--line);overflow:hidden}
 .trackHeader,.trackRow{display:grid;grid-template-columns:32px 1fr 30px 30px 68px 40px 48px 48px;align-items:center;gap:4px;padding:0 6px}
 .trackHeader{height:28px;border-bottom:1px solid var(--line);color:var(--muted);font-size:10px;text-transform:uppercase}
@@ -110,11 +110,79 @@ button{cursor:pointer}
 .footer{display:flex;align-items:center;gap:28px;padding:0 10px;border-top:1px solid var(--line);background:#110b06;color:var(--muted);font-size:10px}
 .footer .drop{margin-left:auto;color:var(--text)}
 
+
+.splitter{
+  position:relative;
+  z-index:20;
+  background:linear-gradient(#24170c,#100a05);
+  border-color:#5f421f;
+  user-select:none;
+  touch-action:none;
+}
+.splitter::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  margin:auto;
+  border-radius:999px;
+  background:#9a6b2a;
+  opacity:.7;
+}
+.splitter:hover,.splitter.dragging{
+  background:#3a260f;
+}
+.splitter:hover::after,.splitter.dragging::after{
+  background:var(--gold2);
+  opacity:1;
+}
+.splitter.vertical{
+  width:7px;
+  cursor:col-resize;
+  border-left:1px solid #2e1d0c;
+  border-right:1px solid #704d20;
+}
+.splitter.vertical::after{
+  width:2px;
+  height:42px;
+}
+.splitter.horizontal{
+  height:7px;
+  cursor:row-resize;
+  border-top:1px solid #704d20;
+  border-bottom:1px solid #2e1d0c;
+}
+.splitter.horizontal::after{
+  width:52px;
+  height:2px;
+}
+.layoutHint{
+  color:var(--muted);
+  font-size:10px;
+  white-space:nowrap;
+}
+.mainAction{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  visibility:visible!important;
+  opacity:1;
+  position:relative;
+  z-index:2;
+}
+
 @media(max-width:1100px){
-  :root{--head:255px;--inspect:0px}
-  .top{grid-template-columns:220px auto 1fr}.masterTop{display:none}.inspector{display:none}
+  :root{--head:285px;--inspect:235px}
+  .top{grid-template-columns:220px auto minmax(250px,1fr)}
+  .masterTop{display:none}
   .trackHeader,.trackRow{grid-template-columns:28px 1fr 28px 28px 56px 36px 44px}
   .trackHeader>*:nth-last-child(2),.trackRow>*:nth-last-child(2){display:none}
+}
+@media(max-width:900px){
+  :root{--head:235px;--inspect:0px}
+  .workspace{grid-template-columns:var(--head) 7px minmax(0,1fr)}
+  .inspector,.rightSplitter{display:none}
+  .trackHeader,.trackRow{grid-template-columns:28px 1fr 28px 28px 52px 40px}
+  .trackHeader>*:nth-last-child(-n+2),.trackRow>*:nth-last-child(-n+2){display:none}
 }
 @media(max-width:760px){
   html,body{overflow:auto}
@@ -123,7 +191,8 @@ button{cursor:pointer}
   .brand{width:100%}.logo{width:48px;height:44px;font-size:26px}.brand h1{font-size:18px}
   .transport{order:2}.readouts{order:3;margin-left:auto}.readout{min-width:74px}.readout strong{font-size:14px}
   .toolrow{order:4;width:100%;overflow-x:auto;white-space:nowrap}
-  .workspace{display:block}
+  .workspace{display:block;overflow:visible}
+  .splitter{display:none}
   .trackPane{display:none}
   .arrangeWrap{height:48vh;min-height:330px}
   .ruler{position:sticky;top:112px;z-index:20}
@@ -366,14 +435,14 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
     </div>
 
     <div class="toolrow">
-      <button id="loadRepo" class="btn">▶ LOAD PROJECT STEMS</button>
-      <label class="btn">⇧ IMPORT AUDIO<input id="files" type="file" accept="audio/*" multiple hidden></label>
-      <button id="exportAllMidi" class="btn" disabled>⇩ EXPORT ALL MIDI ZIP</button>
+      <button id="loadRepo" class="btn mainAction">▶ LOAD PROJECT STEMS</button>
+      <label class="btn mainAction">⇧ IMPORT AUDIO<input id="files" type="file" accept="audio/*" multiple hidden></label>
+      <button id="exportAllMidi" class="btn mainAction" disabled>⇩ EXPORT ALL MIDI ZIP</button>
       <span>SNAP</span><select><option>Bar</option><option>Beat</option><option>Off</option></select>
       <span>GRID</span><select><option>1/4</option><option>1/8</option><option>1/16</option></select>
       <div class="spacer"></div>
       <span>ZOOM</span><input id="zoom" type="range" min="40" max="180" value="64">
-      <button id="reset" class="btn">RESET MIX</button><span id="loadStatus" style="min-width:160px;color:var(--gold2);font-size:11px"></span>
+      <button id="reset" class="btn mainAction">RESET MIX</button><button id="resetLayout" class="btn">RESET LAYOUT</button><span class="layoutHint">Drag panel borders to resize</span><span id="loadStatus" style="min-width:160px;color:var(--gold2);font-size:11px"></span>
     </div>
   </header>
 
@@ -382,6 +451,7 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
       <div class="trackHeader"><span>#</span><span>TRACK</span><span>M</span><span>S</span><span>VOL</span><span>PAN</span><span>METER</span><span>MIDI</span></div>
       <div id="trackRows" class="trackRows"></div>
     </aside>
+    <div id="leftSplitter" class="splitter vertical leftSplitter" role="separator" aria-label="Resize track list" aria-orientation="vertical"></div>
 
     <div class="arrangeWrap">
       <div class="ruler"><div id="ruler" class="rulerInner"></div></div>
@@ -389,6 +459,7 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
         <div id="timeline" class="timeline"><div id="playhead" class="playhead"></div></div>
       </div>
     </div>
+    <div id="rightSplitter" class="splitter vertical rightSplitter" role="separator" aria-label="Resize inspector" aria-orientation="vertical"></div>
 
     <aside class="inspector">
       <h3>TRACK</h3>
@@ -433,6 +504,8 @@ input[type="range"]:disabled{opacity:.42;cursor:not-allowed}
       </div>
     </aside>
   </section>
+
+  <div id="mixerSplitter" class="splitter horizontal" role="separator" aria-label="Resize mixer" aria-orientation="horizontal"></div>
 
   <section class="mixer">
     <aside class="mixerTabs"><button class="btn">MIXER</button><button class="btn">EFFECTS</button></aside>
@@ -1076,8 +1149,93 @@ $('#inspectDelete').onclick=()=>selected&&removeTrack(selected);
 $('#exportAllMidi').onclick=exportAllMidiZip;
 $('#reset').onclick=()=>{tracks.forEach(t=>{t.muted=t.solo=false;t.volume=.8;t.panValue=0;setRange(t.row.querySelector('.vol'),.8);setRange(t.strip.querySelector('.fader'),.8);t.row.querySelectorAll('.mini').forEach(b=>b.classList.remove('active'));t.strip.querySelectorAll('.mini').forEach(b=>b.classList.remove('active'));if(t.pan.pan)t.pan.pan.value=0});setMaster(.85);applyMix()};
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|SELECT|BUTTON/.test(e.target.tagName)){e.preventDefault();toggle()}});
+
+const layoutDefaults={head:390,inspect:285,mixer:430};
+const layoutStorageKey='spaghetti-daw-layout-v1';
+
+function clamp(value,min,max){
+ return Math.min(max,Math.max(min,value));
+}
+function pxVar(name,fallback){
+ const value=parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
+ return Number.isFinite(value)?value:fallback;
+}
+function applyLayout(layout,persist=true){
+ const viewport=Math.max(320,window.innerWidth);
+ const head=clamp(Number(layout.head)||layoutDefaults.head,190,Math.max(210,viewport-520));
+ const inspect=clamp(Number(layout.inspect)||layoutDefaults.inspect,210,Math.max(220,viewport-520));
+ const mixer=clamp(Number(layout.mixer)||layoutDefaults.mixer,210,Math.max(240,window.innerHeight-260));
+ document.documentElement.style.setProperty('--head',head+'px');
+ document.documentElement.style.setProperty('--inspect',inspect+'px');
+ document.documentElement.style.setProperty('--mixerH',mixer+'px');
+ if(persist){
+   try{localStorage.setItem(layoutStorageKey,JSON.stringify({head,inspect,mixer}))}catch{}
+ }
+ requestAnimationFrame(()=>{
+   rebuildRuler();
+   tracks.forEach(t=>drawWaveform(t.waveCanvas,t.buffer,t.color));
+   draw();
+ });
+}
+function currentLayout(){
+ return {
+   head:pxVar('--head',layoutDefaults.head),
+   inspect:pxVar('--inspect',layoutDefaults.inspect),
+   mixer:pxVar('--mixerH',layoutDefaults.mixer)
+ };
+}
+function restoreLayout(){
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(layoutStorageKey)||'null')}catch{}
+ applyLayout(saved||layoutDefaults,false);
+}
+function bindSplitter(element,onMove){
+ if(!element)return;
+ element.addEventListener('pointerdown',event=>{
+   if(window.innerWidth<=760)return;
+   event.preventDefault();
+   element.classList.add('dragging');
+   element.setPointerCapture(event.pointerId);
+   const move=e=>onMove(e);
+   const finish=e=>{
+     element.classList.remove('dragging');
+     try{element.releasePointerCapture(e.pointerId)}catch{}
+     element.removeEventListener('pointermove',move);
+     element.removeEventListener('pointerup',finish);
+     element.removeEventListener('pointercancel',finish);
+     applyLayout(currentLayout(),true);
+   };
+   element.addEventListener('pointermove',move);
+   element.addEventListener('pointerup',finish);
+   element.addEventListener('pointercancel',finish);
+ });
+ element.addEventListener('dblclick',()=>{
+   applyLayout(layoutDefaults,true);
+ });
+}
+
+bindSplitter($('#leftSplitter'),event=>{
+ const layout=currentLayout();
+ layout.head=clamp(event.clientX,190,Math.max(210,window.innerWidth-560));
+ applyLayout(layout,false);
+});
+bindSplitter($('#rightSplitter'),event=>{
+ const layout=currentLayout();
+ layout.inspect=clamp(window.innerWidth-event.clientX,210,Math.max(220,window.innerWidth-560));
+ applyLayout(layout,false);
+});
+bindSplitter($('#mixerSplitter'),event=>{
+ const footerHeight=document.querySelector('.footer')?.getBoundingClientRect().height||28;
+ const layout=currentLayout();
+ layout.mixer=clamp(window.innerHeight-event.clientY-footerHeight,210,Math.max(240,window.innerHeight-260));
+ applyLayout(layout,false);
+});
+$('#resetLayout')?.addEventListener('click',()=>applyLayout(layoutDefaults,true));
+restoreLayout();
+
 document.querySelectorAll('input[type="range"]').forEach(bindRange);
 window.addEventListener('resize',()=>{
+ if(window.innerWidth>760)applyLayout(currentLayout(),false);
  tracks.forEach(t=>{drawWaveform(t.waveCanvas,t.buffer,t.color);drawSpectrum(t.vizCanvas,new Uint8Array(t.an.frequencyBinCount),t.color,false)});
  draw();
 });
